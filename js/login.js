@@ -1,4 +1,5 @@
 const loginForm= document.querySelector('#loginForm');
+const invalidFeedback= document.querySelector('.invalid-feedback');
 
 
 loginForm.addEventListener('submit', (event) => {
@@ -44,5 +45,6 @@ function login() {
         }
         console.error('Enter valid password');
     }
+    invalidFeedback.style.dispplay = 'block';
     console.error('Enter a valid email address');
 }

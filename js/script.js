@@ -1,6 +1,9 @@
 const registrationForm = document.querySelector('#registrationForm');
 const transferMoneyForm = document.querySelector('#transferMoney');
 const loginBTN = document.querySelector('.login');
+const balanceField = document.querySelector('.balance');
+const tdebitsField = document.querySelector('.tdebits');
+const tcreditsField = document.querySelector('.tcredits');
 
 try {
     registrationForm.addEventListener('submit', (event) =>{
@@ -99,28 +102,41 @@ class Transaction extends BankUser{
         localStorage.setItem('transactionList', JSON.stringify(this.transactionList));
     }
 }
+let loggedUser;
 
-
+// Check if user is logged in
 window.addEventListener('load', ()=>{
     let userList = localStorage.getItem('userlist');
     userList = JSON.parse(userList);
-    let loggedUser = userList.filter((user) =>{
-        return user.logged === 'loggedin';
-    });
-    if (loggedUser) {
-        loginBTN.innerHTML = 'log out';
-    }
 
-    console.log(loggedUser);
+    try {
+        loggedUser = userList.filter((user) =>{
+            return user.logged === 'loggedin';
+        });
+        if (loggedUser) {
+            loginBTN.innerHTML = 'log out';
+            balanceField.innerHTML = `${loggedUser[0].balance}`;
+        }
+    
+        console.log(loggedUser);
+    
+    } catch (error) {
+        console.error('User list not defined');
+    }
 });
 
 
 transferMoneyForm.addEventListener('submit', (event) =>{
     event.preventDefault();
-    if (loggedUser) {
-      console.log('user is logged in');  
-    }
-    else{
-        console.error('Please log in');
+    try {
+        if (loggedUser) {
+            console.log('user is logged in');  
+          }
+          else{
+              console.error('Please log in');
+          }
+       
+    } catch (error) {
+        console.error('log in');
     }
 });
