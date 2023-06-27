@@ -96,12 +96,15 @@ class Transaction extends BankUser{
         this.recipient = recipient;
     }
 
+    //Add transaction
     static addTransaction(transaction){
 
         Transaction.transactionList.push(transaction);
         let transactionList = Transaction.transactionList;
         localStorage.setItem('transactionList', JSON.stringify(this.transactionList));
     }
+
+    // Display transaction list
     static displayTransactions(){
         let transactionList = localStorage.getItem('transactionList');
         transactionList = JSON.parse(transactionList);
@@ -121,6 +124,7 @@ class Transaction extends BankUser{
 
     };
 }
+
 let loggedUser;
 
 // Check if user is logged in
@@ -134,17 +138,19 @@ window.addEventListener('load', ()=>{
         });
         if (loggedUser) {
             loginBTN.innerHTML = 'log out';
+            username.innerHTML = `${loggedUser[0].name}`;
             balanceField.innerHTML = `${loggedUser[0].balance}`;
         }
     
         console.log(loggedUser);
     
     } catch (error) {
+        loginBTN.innerHTML = 'log in';
         console.error('User list not defined');
     }
 });
 
-
+//transfer money
 transferMoneyForm.addEventListener('submit', (event) =>{
     event.preventDefault();
     console.log('user is logged in');  
@@ -174,3 +180,24 @@ transferMoneyForm.addEventListener('submit', (event) =>{
     //     console.error('log in');
     // }
 });
+loginBTN.addEventListener('click', ()=>{
+    if (loginBTN.innerHTML == 'log out') {
+        logout();
+    }
+    else{
+        window.location.href = `../login.html`;
+    }
+})
+function logout() {
+        let userList = localStorage.getItem('userlist');
+        userList = JSON.parse(userList);
+        userList.map((user)=>{
+            if (user.accountNumber === loggedUser[0].accountNumber) {
+                user.logged = '';
+            };
+        });
+        console.log(userList);
+        localStorage.setItem('userlist', JSON.stringify(userList));
+    
+        window.location.href = `../login.html`;
+}
