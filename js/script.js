@@ -1,9 +1,16 @@
 const registrationForm = document.querySelector('#registrationForm');
+const transferMoneyForm = document.querySelector('#transferMoney');
+const loginBTN = document.querySelector('.login');
 
-registrationForm.addEventListener('submit', (event) =>{
-    event.preventDefault();
-    Bank.addUser();
-})
+try {
+    registrationForm.addEventListener('submit', (event) =>{
+        event.preventDefault();
+        Bank.addUser();
+    })
+    
+} catch (error) {
+    console.error('No registration Form')
+}
 
 
 //Bank
@@ -67,6 +74,11 @@ class BankUser extends Bank{
         }
         return acctNumber;
      }
+
+     static displayUserName(){
+        let userlist = localStorage.getItem('userlist');
+        userlist = JSON.parse(userlist);
+     }
 }
 
 //Transaction
@@ -89,3 +101,26 @@ class Transaction extends BankUser{
 }
 
 
+window.addEventListener('load', ()=>{
+    let userList = localStorage.getItem('userlist');
+    userList = JSON.parse(userList);
+    let loggedUser = userList.filter((user) =>{
+        return user.logged === 'loggedin';
+    });
+    if (loggedUser) {
+        loginBTN.innerHTML = 'log out';
+    }
+
+    console.log(loggedUser);
+});
+
+
+transferMoneyForm.addEventListener('submit', (event) =>{
+    event.preventDefault();
+    if (loggedUser) {
+      console.log('user is logged in');  
+    }
+    else{
+        console.error('Please log in');
+    }
+});

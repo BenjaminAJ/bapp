@@ -33,6 +33,13 @@ function login() {
         if (inputPassword === user[0].password) {
             console.log('You are logged in');
             window.location.href = '/userpage.html';
+            userList.map(user => {
+                if (user.email === inputEmail) {
+                    user.logged = 'loggedin';
+                }
+            })
+            localStorage.setItem('userlist', JSON.stringify(userList));
+            console.log(userList);
             return            
         }
         console.error('Enter valid password');
