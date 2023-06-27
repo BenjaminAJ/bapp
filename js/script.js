@@ -4,6 +4,7 @@ const loginBTN = document.querySelector('.login');
 const balanceField = document.querySelector('.balance');
 const tdebitsField = document.querySelector('.tdebits');
 const tcreditsField = document.querySelector('.tcredits');
+const transactionTable = document.querySelector('.transactionTable');
 
 try {
     registrationForm.addEventListener('submit', (event) =>{
@@ -101,6 +102,24 @@ class Transaction extends BankUser{
         let transactionList = Transaction.transactionList;
         localStorage.setItem('transactionList', JSON.stringify(this.transactionList));
     }
+    static displayTransactions(){
+        let transactionList = localStorage.getItem('transactionList');
+        transactionList = JSON.parse(transactionList);
+
+        tbody.innerHTML='';
+        transactionList.forEach((transaction, index) => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${index +1}</td>
+                    <td>${transaction.sender}</td>
+                    <td>${transaction.recipient}</td>
+                    <td>${transaction.amount}</td>
+                    <td>${transaction.date}</td>
+                </tr>
+            `;
+        });
+
+    };
 }
 let loggedUser;
 
@@ -128,15 +147,30 @@ window.addEventListener('load', ()=>{
 
 transferMoneyForm.addEventListener('submit', (event) =>{
     event.preventDefault();
-    try {
-        if (loggedUser) {
-            console.log('user is logged in');  
-          }
-          else{
-              console.error('Please log in');
-          }
+    console.log('user is logged in');  
+    let d = new Date();
+    let amount = transferMoneyForm.amount.value;
+    let recipient = transferMoneyForm.accountNumber.value;
+    let newTransaction = new Transaction(`${d.getDay()}/${d.getMonth()}/${d.getFullYear()}`,`${amount}`, `${loggedUser[0].accountNumber}`, `${recipient}`);
+    Transaction.addTransaction(newTransaction);
+    Transaction.displayTransactions();
+
+    // try {
+    //     if (loggedUser) {
+    //         console.log('user is logged in');  
+    //         let date = new Date();
+    //         let amount = transferMoneyForm.amount.value;
+    //         let recipient = transferMoneyForm.accountNumber.value;
+    //         let newTransaction = new Transaction(`${date.getDay()}`,`${amount}`, `${loggedUser[0].accountNumber}`, `${recipient}`);
+    //         Transaction.addTransaction(newTransaction);
+    //         Transaction.displayTransactions();
+    //       }
+    //       else{
+    //           console.error('Please log in');
+    //           return
+    //       }
        
-    } catch (error) {
-        console.error('log in');
-    }
+    // } catch (error) {
+    //     console.error('log in');
+    // }
 });
